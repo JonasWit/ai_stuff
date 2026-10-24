@@ -7,6 +7,7 @@ agents make fewer mistakes, and how to encode that knowledge in `AGENTS.md` and
 Read these before editing anything:
 
 - `docs/zasady-ai.md` — canonical coding rules, in Polish.
+- `docs/preferowane-wybory.md` — the one-page human summary of preferred choices.
 - `docs/jak-pisac-agents-md.md` — how to distribute those rules into instruction files.
 - `docs/wzorce.md` — decision log; every new pattern needs an entry here.
 - `docs/testy-instrukcji.md` — probes that check whether the rules actually bind.

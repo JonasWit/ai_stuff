@@ -12,6 +12,7 @@ egzekwowania — do komendy, hooka, CI albo uprawnień.
 
 | Plik | Na jakie pytanie odpowiada |
 | --- | --- |
+| [`docs/preferowane-wybory.md`](docs/preferowane-wybory.md) | Skrót dla człowieka: jakie wybory architektoniczne i programistyczne preferować |
 | [`docs/zasady-ai.md`](docs/zasady-ai.md) | Jakich reguł przestrzegać przy pisaniu kodu i dlaczego zmniejszają one liczbę błędów modelu |
 | [`docs/jak-pisac-agents-md.md`](docs/jak-pisac-agents-md.md) | Jak przenieść tę wiedzę do `AGENTS.md` / `CLAUDE.md`, żeby naprawdę działała |
 | [`docs/wzorce.md`](docs/wzorce.md) | Dziennik decyzji: problem, decyzja, odrzucone alternatywy, konsekwencje |
