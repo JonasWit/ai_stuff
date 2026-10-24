@@ -17,7 +17,8 @@
 - Nie zgaduj API. Najpierw typy albo dokumentacja, potem kod.
 - Jeden cel na zmianę: bez refaktorów przy okazji, bez pozostawionych TODO.
 - Najpierw znajdź istniejący wzorzec w repozytorium i go powtórz.
-- Przed uznaniem zadania za skończone uruchom `uv run python scripts/check.py` i pokaż surowy wynik.
+- Przed uznaniem zadania za skończone uruchom komendę sprawdzającą projektu (tutaj:
+  `uv run python scripts/check.py`) i pokaż surowy wynik.
 - Reguła, której nie da się sprawdzić maszynowo, prędzej czy później zostanie złamana.
 
 ## Jak czytać ten dokument
@@ -34,6 +35,23 @@ Każda reguła odpowiada realnemu trybowi awarii modelu: zgubienie kontekstu, do
 nieistniejącego API, pominięcie przypadku, naprawienie jednej kopii reguły z dwóch,
 zmiana, która wygląda na lokalną, a dotyka pięciu plików. Reguła, która nie adresuje
 żadnego z tych trybów, nie ma tu czego szukać.
+
+## Niezależność od języka
+
+Zasady opisują własności kodu, nie składnię. Tłumaczy się je na idiomy języka, w którym powstaje
+projekt, zamiast przenosić rozwiązania z języka, w którym były dobre.
+
+- **Zamknięte warianty i wyczerpujące dopasowanie** — sealed class z `when` (Kotlin), discriminated
+  union z `never` (TypeScript), `enum` z `match` (Python, Rust), `switch` z nieosiągalnym `default`.
+  W językach bez sum typów rolę kompilatora przejmuje test wyczerpujący warianty.
+- **Wynik jako wartość** — `Result`, `Either` albo jawny typ błędu w sygnaturze, gdy język nie ma
+  typowanego wyniku. Wyjątki zostają na granicy.
+- **Port i adapter** — `interface`, `Protocol`, `trait`, funkcja wyższego rzędu: cokolwiek język
+  oferuje jako kontrakt.
+- **Czysta funkcja** — brak mutacji i brak I/O, niezależnie od tego, czy język to wymusza.
+
+Preferencje narzędziowe autora (Python i `uv` dla skryptów oraz testów narzędziowych) są wyborem
+środowiska, nie zasadą architektury. Projekt z własnym toolchainem zachowuje swój.
 
 ## Precedencja
 
@@ -187,14 +205,16 @@ kształtów danych — myli się głównie na granicy, gdzie wszystko jest „ja
 Warianty zachowania są reprezentowane jako zamknięty zbiór typów, a obsługa wymaga
 wyczerpującego dopasowania. Dodanie wariantu generuje błędy kompilacji we wszystkich
 miejscach, które trzeba zaktualizować. To najskuteczniejsza znana technika zamiany cichego
-pominięcia przypadku na głośny błąd.
+pominięcia przypadku na głośny błąd. Gdy język nie ma sum typów, rolę kompilatora przejmuje
+test, który iteruje po wszystkich wariantach — inaczej reguła nie działa wcale.
 
 ### Błędy jako wartości w rdzeniu
 
 Rdzeń zwraca wynik jako wartość, która w typie wymienia możliwe porażki. Wyjątki zostają na
 granicy, tam gdzie zamieniają się na odpowiedź lub log. Sygnatura pokazuje wtedy każdy
 przypadek, o którym trzeba pamiętać; wyjątek jest niewidoczny w sygnaturze, więc model
-regularnie go pomija.
+regularnie go pomija. W językach bez typowanego wyniku tę rolę przejmuje jawny typ błędu
+w sygnaturze albo równie jawny, udokumentowany kontrakt.
 
 ### Sygnatury bez flag
 
@@ -378,7 +398,7 @@ Milczenie w sprawie niepewności jest zgłoszeniem fałszywej pewności.
 ## Definicja „gotowe”
 
 Zmiana jest gotowa, gdy test został napisany przed implementacją, przeszedł fazę czerwoną,
-a następnie zieloną, `uv run python scripts/check.py` przechodzi, żadne twierdzenie w opisie zmiany nie
+a następnie zieloną, komenda sprawdzająca projektu przechodzi, żadne twierdzenie w opisie zmiany nie
 zostało bez wskazania testu, a zależności nie wzrosły bez uzasadnienia.
 
 ## Przenoszenie zasad do narzędzi
@@ -391,8 +411,8 @@ Stan obecny:
 - `scripts/check.py` — jedna komenda sprawdzająca to, co sprawdzalne bez stacku: obecność
   wymaganych plików, martwe linki w dokumentacji, zakazane znaczniki, budżet rozmiaru plików.
   Gdy pojawi się stack, ta sama komenda uruchomi jego testy.
-- `uv` + `pytest` — skrypty i testy narzędzi są w Pythonie, zarządzanym przez `uv`. Jeden
-  toolchain dla narzędzi, żeby nie mnożyć sposobów uruchamiania.
+- Preferencja autora, nie zasada architektury: skrypty i testy narzędzi są w Pythonie,
+  zarządzanym przez `uv`, z testami w `pytest`. Projekt z własnym toolchainem zachowuje swój.
 - `.githooks/commit-msg` — commit bez linii `Test:` albo `Unverified: <powód>` nie powstaje.
 - szablon PR z checklistą definicji „gotowe”.
 - CI na PR i wymagany status przed mergem do `main` — do włączenia razem z pierwszym stackiem.

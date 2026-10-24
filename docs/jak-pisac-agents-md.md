@@ -126,6 +126,16 @@ niewiążące.
 Streszczenie w pliku instrukcji i źródło w `docs/`. Kopia pełnej treści w dwóch miejscach to
 gwarantowana sprzeczność.
 
+### Nie mieszaj preferencji narzędziowych z architekturą
+
+Wybór języka do skryptów, frameworka testowego czy menedżera pakietów to preferencja, nie zasada
+architektury. W pliku instrukcji można ją wymienić, ale trzeba ją tak nazwać. Inaczej projekt
+dziedziczy idiomy jednego stacku jako prawo uniwersalne, a przy zmianie technologii reguły tracą
+sens razem z narzędziem.
+
+Architektura opisuje własności: czysty rdzeń, jedną granicę walidacji, jawne warianty. Język
+podaje tylko sposób ich zapisania.
+
 ### Nie zostawiaj martwych reguł
 
 Reguła, która od miesięcy nie została użyta ani złamana, zajmuje kontekst i rozwadnia resztę.

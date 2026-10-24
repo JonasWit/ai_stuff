@@ -134,20 +134,36 @@ Każde nowe sprawdzenie wymaga testu.
 
 ### Skrypty i testy w Pythonie zarządzanym przez uv
 
-**Status:** przyjęte
+**Status:** przyjęte jako preferencja autora
 
 **Problem:** narzędzia pomocnicze trzeba uruchamiać jedną komendą na każdej maszynie, bez
 ręcznego instalowania interpretera i bibliotek. Pierwsza wersja była w PowerShellu, co wiązało
 narzędzia z Windowsem i utrudniało testowanie.
 
-**Decyzja:** wszystkie skrypty i testy narzędzi są w Pythonie. Środowisko i wersje zarządza
-`uv`, testy piszemy w `pytest` i uruchamiamy przez `uv run pytest`. Zależności deklaruje
-`pyproject.toml`, wersje są przypięte w `uv.lock`.
+**Decyzja:** skrypty pomocnicze i ich testy w tym repozytorium są w Pythonie. Środowisko i wersje
+zarządza `uv`, testy piszemy w `pytest` i uruchamiamy przez `uv run pytest`. Zależności deklaruje
+`pyproject.toml`, wersje są przypięte w `uv.lock`. To wybór narzędzia, nie zasada architektury.
 
 **Odrzucone alternatywy:** PowerShell — tylko Windows, brak wygodnego frameworka testowego;
 Node — drugi toolchain obok Pythona; globalny `pip` — niedeterministyczne środowisko, zależne
 od tego, co już jest zainstalowane.
 
 **Konsekwencje:** każdy nowy skrypt ma test w `scripts/tests/`. Uruchomienie nie wymaga
-aktywowania środowiska ani ręcznej instalacji zależności. Drugi toolchain wymaga wpisu w tym
-dzienniku.
+aktywowania środowiska ani ręcznej instalacji zależności. Reguły architektoniczne pozostają
+niezależne od języka; projekt z własnym toolchainem zachowuje swój.
+
+### Podsumowanie dla człowieka w README
+
+**Status:** przyjęte
+
+**Problem:** jednostronicowe podsumowanie wyborów w osobnym pliku wymagało dodatkowego kliknięcia,
+a przy wejściu do repozytorium człowiek i tak otwiera `README.md`.
+
+**Decyzja:** podsumowanie preferowanych wyborów mieszka w `README.md`. Dokumenty w `docs/`
+zawierają uzasadnienia, szczegóły i dziennik decyzji.
+
+**Odrzucone alternatywy:** osobny plik w `docs/` — dodatkowy krok i ryzyko rozjazdu; brak
+podsumowania — wejście wymaga czytania całego dokumentu.
+
+**Konsekwencje:** `README.md` jest jedynym miejscem na skrót. Zmiana reguły wymaga sprawdzenia
+`README.md` i `docs/zasady-ai.md`.

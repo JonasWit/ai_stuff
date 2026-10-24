@@ -66,13 +66,6 @@ def test_missing_required_document_fails(make_repo, capsys):
     assert "docs/wzorce.md" in out
 
 
-def test_missing_preferred_choices_document_fails(make_repo, capsys):
-    root = make_repo(missing=("docs/preferowane-wybory.md",))
-    code, out = run(root, capsys)
-    assert code == 1
-    assert "docs/preferowane-wybory.md" in out
-
-
 def test_dead_relative_link_fails(make_repo, capsys):
     root = make_repo({"README.md": "[missing](docs/nie-ma.md)\n"})
     code, out = run(root, capsys)

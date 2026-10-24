@@ -27,7 +27,6 @@ REQUIRED_FILES = (
     "docs/jak-pisac-agents-md.md",
     "docs/wzorce.md",
     "docs/testy-instrukcji.md",
-    "docs/preferowane-wybory.md",
     "scripts/check.py",
 )
 
