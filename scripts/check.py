@@ -37,6 +37,7 @@ EXCLUDED_DIRS = frozenset(
 CODE_EXTENSIONS = frozenset(
     {
         ".py",
+        ".kt",
         ".ps1",
         ".psm1",
         ".ts",

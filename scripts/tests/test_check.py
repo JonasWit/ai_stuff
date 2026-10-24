@@ -110,6 +110,13 @@ def test_forbidden_marker_in_docs_is_allowed(make_repo, capsys):
     assert code == 0
 
 
+def test_forbidden_marker_in_kotlin_fails(make_repo, capsys):
+    root = make_repo({"examples/app.kt": "// TO" + "DO later\n"})
+    code, out = run(root, capsys)
+    assert code == 1
+    assert "examples/app.kt" in out
+
+
 def test_paths_are_reported_with_forward_slashes(make_repo, capsys):
     root = make_repo({"src/app.py": "# TO" + "DO fix this\n"})
     _, out = run(root, capsys)

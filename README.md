@@ -76,6 +76,12 @@ osobno i nie jest zasadą architektury.
 - **Nie zmieniaj nazw i struktury w commicie naprawiającym błąd.**
 - **Nie zostawiaj `TODO`.** Albo zrobione, albo zgłoszone jako niezrobione.
 
+## Złoty przykład
+
+[`examples/kotlin/`](examples/kotlin/README.md) — `TimerEngine` z projektu `workoutbase`
+jako wzorzec czystego rdzenia: niemutowalny stan, czas jako argument, wyczerpujące
+dopasowanie wariantów i testy pisane jak specyfikacja.
+
 ## Dokumenty
 
 | Plik | Na jakie pytanie odpowiada |

@@ -167,3 +167,19 @@ podsumowania — wejście wymaga czytania całego dokumentu.
 
 **Konsekwencje:** `README.md` jest jedynym miejscem na skrót. Zmiana reguły wymaga sprawdzenia
 `README.md` i `docs/zasady-ai.md`.
+
+### Złoty przykład z workoutbase
+
+**Status:** przyjęte — zastępuje wcześniejszą decyzję „złoty przykład dopiero przy pierwszym stacku”
+
+**Problem:** reguły opisowe nie pokazują, jak wygląda ich realizacja w prawdziwym kodzie, a stack
+pierwszego projektu już istnieje: Kotlin w `workoutbase`.
+
+**Decyzja:** `examples/kotlin/` zawiera `TimerEngine` i jego testy skopiowane z `workoutbase` bez
+zmian, z opisem, co ilustrują i czego w tym katalogu nie ma.
+
+**Odrzucone alternatywy:** napisanie nowego przykładu od zera — duplikowałoby istniejący, sprawdzony
+kod; trzymanie przykładu wyłącznie w `workoutbase` — wiedza nie byłaby dostępna poza tym projektem.
+
+**Konsekwencje:** przykład jest referencją, nie budowanym modułem. Zmiana zasad wymaga sprawdzenia,
+czy przykład nadal je ilustruje.
