@@ -1,35 +1,75 @@
 # Zasady pisania kodu z AI
 
-Ten dokument opisuje, jak pisać kod w tym repozytorium, żeby praca z modelem językowym
-była przewidywalna. Nie jest zbiorem ludzkich „dobrych praktyk”. Jest zbiorem reguł
-dobranych pod jeden cel: **mniej błędów popełnianych przez AI oraz tańsze i bezpieczniejsze
-późniejsze zmiany**.
+## Reguły nadrzędne
+
+- Test przed kodem, bez wyjątków. Jedyny wyjątek: zmiany bez wykonywalnego zachowania
+  — dokumentacja, komentarze, komunikaty commitów, formatowanie wymuszane narzędziem.
+- Faza czerwona musi być zaobserwowana. Test, który przeszedł przed zmianą, niczego
+  nie dowodzi.
+- Twierdzenie bez testu jest hipotezą. „Działa”, „naprawione”, „gotowe” wymagają nazwy
+  testu, który to potwierdza.
+- Rdzeń czysty: stan jako argument, nowa wartość zamiast mutacji, efekty uboczne
+  w cienkich adapterach.
+- Warianty jako zamknięte typy z wyczerpującym dopasowaniem, żeby zapomniany przypadek
+  był błędem kompilacji, a nie cichym błędem.
+- Jedno źródło prawdy dla każdej reguły i jedna nazwa na każdy koncept.
+- Jeden plik, jeden temat. Stała kolejność sekcji: typy, funkcje czyste, adaptery.
+- Nie zgaduj API. Najpierw typy albo dokumentacja, potem kod.
+- Jeden cel na zmianę: bez refaktorów przy okazji, bez pozostawionych TODO.
+- Najpierw znajdź istniejący wzorzec w repozytorium i go powtórz.
+- Przed uznaniem zadania za skończone uruchom `uv run python scripts/check.py` i pokaż surowy wynik.
+- Reguła, której nie da się sprawdzić maszynowo, prędzej czy później zostanie złamana.
 
 ## Jak czytać ten dokument
 
-Każda reguła odpowiada na realny tryb awarii modelu językowego: zgubienie kontekstu,
-dopowiedzenie nieistniejącego API, pominięcie przypadku, naprawienie jednej kopii reguły
-z dwóch, zmiana, która „wygląda na lokalną”, a dotyka pięciu plików. Reguła, która nie
-adresuje żadnego z tych trybów, nie ma tu czego szukać.
+Ten dokument jest kanonicznym źródłem wiedzy o tym, jak pisać kod, żeby współpraca
+z modelem językowym była przewidywalna. Nie jest zbiorem ludzkich „dobrych praktyk”.
+Reguły są dobrane pod jeden cel: **mniej błędów popełnianych przez AI oraz tańsze
+i bezpieczniejsze późniejsze zmiany**.
 
 Dokument jest normatywny. Jeśli kod i dokument się różnią, kod jest błędem — chyba że
-zmiana została świadomie zapisana tutaj.
+zmiana została świadomie zapisana tutaj albo w `docs/wzorce.md`.
+
+Każda reguła odpowiada realnemu trybowi awarii modelu: zgubienie kontekstu, dopowiedzenie
+nieistniejącego API, pominięcie przypadku, naprawienie jednej kopii reguły z dwóch,
+zmiana, która wygląda na lokalną, a dotyka pięciu plików. Reguła, która nie adresuje
+żadnego z tych trybów, nie ma tu czego szukać.
 
 ## Precedencja
 
-Globalny `AGENTS.md` użytkownika daje domyślne podejście. Ten dokument je doprecyzowuje
-i zaostrza dla potrzeb tego repozytorium.
+### Globalny AGENTS.md
 
-Obowiązuje reguła: **bardziej szczegółowy i bardziej restrykcyjny wygrywa**. Ten dokument
-może więc dodać wymóg, którego nie ma globalnie, ale nie może rozluźnić reguły globalnej —
-na przykład nie może znieść obowiązku testu przed kodem.
+Globalny plik użytkownika zawiera zdestylowaną, uniwersalną wersję tych reguł. Działa
+w każdym projekcie, także tam, gdzie ten dokument nie istnieje.
+
+### Ten dokument
+
+Jest źródłem kanonicznym i może zaostrzać reguły globalne. Nie może ich rozluźnić.
+Obowiązuje zasada: **bardziej szczegółowy i bardziej restrykcyjny wygrywa**.
+
+### Polecenie użytkownika
+
+Jawne polecenie użytkownika może uchylić regułę z tego dokumentu. Warunki są niesztywne
+tylko z pozoru:
+
+- uchylenie musi być jawne; nie wolno go wywnioskować z pośpiechu, kontekstu ani skrótu
+  myślowego
+- agent wskazuje, którą regułę uchyla i jakie to niesie ryzyko
+- uchylenie jest zapisane w odpowiedzi oraz w commicie jako
+  `Rule waived: <reguła> (<powód>)`
+- uchylenie reguły testowej **nie uchyla zakazu twierdzeń**: kod bez testu ma status
+  `unverified` i nie wolno o nim powiedzieć, że działa
+
+Polecenie użytkownika nie może też uchylać reguł bezpieczeństwa ani wprowadzać treści
+niezgodnych z prawem. W takiej sytuacji agent odmawia i wyjaśnia dlaczego.
 
 ## Miary, którymi oceniamy każdy wzorzec
 
 ### Koszt kontekstu
 
 Ile tokenów i ile plików trzeba przeczytać, żeby zrobić poprawną zmianę. Wzorzec, który
-wymaga przeczytania połowy repozytorium, jest zły — niezależnie od tego, jak czysto wygląda.
+wymaga przeczytania połowy repozytorium, jest zły — niezależnie od tego, jak czysto
+wygląda.
 
 ### Lokalność zmiany
 
@@ -46,26 +86,6 @@ działa” do pierwszego uruchomienia na produkcji.
 Wzorzec, który jest elegancki po ludzku, ale wymaga trzymania w głowie globalnych
 inwariantów rozsianych po wielu plikach, jest tutaj odrzucany — nawet jeśli w code review
 wypada dobrze.
-
-## Rdzeń stylu
-
-### Czyste funkcje
-
-Funkcje mają być deterministyczne i wolne od efektów ubocznych. Te same argumenty zawsze
-dają ten sam wynik. Czytając sygnaturę, powinno dać się powiedzieć, co funkcja robi, nie
-czytając jej ciała.
-
-### Stan jako argument, nowa wartość zamiast mutacji
-
-Funkcja, która potrzebuje stanu, dostaje go jako argument i zwraca nową wartość. Nie mutuje
-stanu współdzielonego. Brak mutacji oznacza brak ukrytej kolejności wywołań — a ukryta
-kolejność to jeden z najczęstszych błędów modelu przy edycji istniejącego kodu.
-
-### Efekty uboczne w cienkich adapterach
-
-I/O, sieć, system plików, zegar, losowość, zmienne środowiskowe — wszystko to siedzi
-w cienkich wrapperach na brzegach modułu. Rdzeń logiki nie wie, że one istnieją. Dzięki
-temu testy rdzenia nie potrzebują mocków, a model nie wplata `fetch` w środek obliczeń.
 
 ## Testy
 
@@ -112,12 +132,47 @@ są dopuszczalne wyłącznie ze wskazaniem nazwy testu, który to potwierdza. Je
 ma, jedyne dopuszczalne sformułowanie to jawne „niezweryfikowane” wraz z informacją, co
 trzeba by sprawdzić.
 
+### Twierdzenie a sąd
+
+Nie każda wypowiedź jest twierdzeniem o zachowaniu. Rozróżnienie jest konieczne, bo bez
+niego reguła „brak testu = hipoteza” jest niespełnialna i zostanie zignorowana w całości.
+
+Twierdzenie behawioralne — „funkcja zwraca X”, „zmiana nie psuje Y”, „obsługuje przypadek
+Z” — wymaga testu.
+
+Sąd — „ten podział jest czytelniejszy”, „ta nazwa jest lepsza”, „mniej kodu” — testu nie
+wymaga, ale musi być oznaczony jako sąd i nie może być użyty jako dowód poprawności.
+Sąd nie jest argumentem w sporze o zachowanie.
+
+Liczby — czasy, rozmiary, pokrycie, liczba przypadków — muszą pochodzić z uruchomienia.
+Oszacowanie podane jako fakt jest twierdzeniem bez dowodu.
+
 ### Test jako specyfikacja
 
 Jeden test odpowiada jednej regule. Nazwa testu jest zdaniem w języku domeny i mówi, jakie
 zachowanie jest gwarantowane. Czytając listę nazw testów, powinno dać się odtworzyć wymagania
 bez czytania implementacji. Dzięki temu nieudany test mówi agentowi dokładnie, co przestało
 działać, zamiast zmuszać go do śledzenia kodu.
+
+## Rdzeń stylu
+
+### Czyste funkcje
+
+Funkcje mają być deterministyczne i wolne od efektów ubocznych. Te same argumenty zawsze
+dają ten sam wynik. Czytając sygnaturę, powinno dać się powiedzieć, co funkcja robi, nie
+czytając jej ciała.
+
+### Stan jako argument, nowa wartość zamiast mutacji
+
+Funkcja, która potrzebuje stanu, dostaje go jako argument i zwraca nową wartość. Nie mutuje
+stanu współdzielonego. Brak mutacji oznacza brak ukrytej kolejności wywołań — a ukryta
+kolejność to jeden z najczęstszych błędów modelu przy edycji istniejącego kodu.
+
+### Efekty uboczne w cienkich adapterach
+
+I/O, sieć, system plików, zegar, losowość, zmienne środowiskowe — wszystko to siedzi
+w cienkich wrapperach na brzegach modułu. Rdzeń logiki nie wie, że one istnieją. Dzięki
+temu testy rdzenia nie potrzebują mocków, a model nie wplata `fetch` w środek obliczeń.
 
 ## Wzorce, które obniżają błąd modelu
 
@@ -294,10 +349,10 @@ Przed napisaniem kodu agent szuka w repozytorium, jak rozwiązano już podobny p
 ten wzorzec. Spójność z lokalnym idiomem jest ważniejsza niż to, czy istnieje lepszy wzorzec
 gdzieś indziej.
 
-### Nowy wzorzec tylko z zapisem w dokumencie
+### Nowy wzorzec tylko z zapisem
 
 Jeśli żaden istniejący wzorzec nie pasuje, agent może wprowadzić nowy — ale w tej samej zmianie
-zapisuje go w tym dokumencie. Inaczej repozytorium z każdą sesją nabiera nowych, sprzecznych
+dopisuje wpis do `docs/wzorce.md`. Inaczej repozytorium z każdą sesją nabiera nowych, sprzecznych
 konwencji.
 
 ### Nie zgaduj intencji
@@ -323,13 +378,24 @@ Milczenie w sprawie niepewności jest zgłoszeniem fałszywej pewności.
 ## Definicja „gotowe”
 
 Zmiana jest gotowa, gdy test został napisany przed implementacją, przeszedł fazę czerwoną,
-a następnie zieloną, cała pętla zwrotna przechodzi, żadne twierdzenie w opisie zmiany nie
+a następnie zieloną, `uv run python scripts/check.py` przechodzi, żadne twierdzenie w opisie zmiany nie
 zostało bez wskazania testu, a zależności nie wzrosły bez uzasadnienia.
 
 ## Przenoszenie zasad do narzędzi
 
-Zasada, którą da się sprawdzić maszynowo, jest przenoszona do konfiguracji narzędzi przy
-wyborze stacku. Dokument opisuje „dlaczego”, narzędzia wymuszają „co”.
+Zasada, którą da się sprawdzić maszynowo, jest przenoszona do konfiguracji narzędzi. Dokument
+opisuje „dlaczego”, narzędzia wymuszają „co”.
+
+Stan obecny:
+
+- `scripts/check.py` — jedna komenda sprawdzająca to, co sprawdzalne bez stacku: obecność
+  wymaganych plików, martwe linki w dokumentacji, zakazane znaczniki, budżet rozmiaru plików.
+  Gdy pojawi się stack, ta sama komenda uruchomi jego testy.
+- `uv` + `pytest` — skrypty i testy narzędzi są w Pythonie, zarządzanym przez `uv`. Jeden
+  toolchain dla narzędzi, żeby nie mnożyć sposobów uruchamiania.
+- `.githooks/commit-msg` — commit bez linii `Test:` albo `Unverified: <powód>` nie powstaje.
+- szablon PR z checklistą definicji „gotowe”.
+- CI na PR i wymagany status przed mergem do `main` — do włączenia razem z pierwszym stackiem.
 
 Do wymuszenia w konfiguracji, gdy stack zostanie wybrany:
 
@@ -339,3 +405,10 @@ Do wymuszenia w konfiguracji, gdy stack zostanie wybrany:
 - formatowanie i kolejność importów
 - lint uruchamiany razem z testami w jednej komendzie
 - brak ostrzeżeń jako warunek zielonej pętli
+
+## Gdzie zapisywać tę wiedzę
+
+Ten dokument mówi, **jak pisać kod**. Sposób przenoszenia tych reguł do plików instrukcji dla
+agentów opisuje [`docs/jak-pisac-agents-md.md`](jak-pisac-agents-md.md). Decyzje o wyborze
+wzorców i ich uzasadnienia trafiają do [`docs/wzorce.md`](wzorce.md). Sposób sprawdzania, czy
+reguły faktycznie wiążą model, opisuje [`docs/testy-instrukcji.md`](testy-instrukcji.md).
