@@ -37,7 +37,7 @@ osobno i nie jest zasadą architektury.
 
 ### Kod
 
-- **Plik do około 300 linii, funkcja do około 30.** Limit pliku egzekwuje `scripts/check.py`.
+- **Plik do około 300 linii, funkcja do około 30.** To konwencja projektu, nie wynik pomiaru; limit pliku egzekwuje `scripts/check.py`.
 - **Jedna nazwa na koncept w całym repo.** Bez synonimów; bez `data`, `manager`, `utils`, `helper`.
 - **Bez flag w parametrach.** Wariant to osobna funkcja albo nazwany obiekt opcji.
 - **Wczesne wyjścia, maksymalnie dwa poziomy zagnieżdżenia.**

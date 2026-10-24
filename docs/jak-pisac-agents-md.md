@@ -11,6 +11,11 @@ przyjemności. Model czyta go w całości, raz, na początku sesji, i potem dzia
 ograniczonego kontekstu. Dokument, który wymaga uważnej lektury, jest dokumentem, który nie
 zadziała.
 
+Założenia o uwadze modelu w tym dokumencie są robocze. Nie ma tu pomiarów — jest praktyka i wnioski
+z niej. Każde takie założenie, które da się sprawdzić sondą z [`docs/testy-instrukcji.md`](testy-instrukcji.md),
+czeka na sprawdzenie, a nie na wiarę. Nie ma też progu długości pliku: liczba linii jest faktem,
+ale nie dowodem, że reguły przestają działać.
+
 ## Zasada nadrzędna
 
 **Instrukcja to nie dokumentacja.** Dokumentacja wyjaśnia. Instrukcja rozkazuje i podaje
@@ -28,8 +33,10 @@ instrukcji zostaje tylko to, co musi być w kontekście od pierwszej sekundy.
 kontekstu w każdym projekcie. Miejsce na reguły uniwersalne, niezależne od stacku: dyscyplina
 testów, czystość rdzenia, proces pracy, reguły komunikacji. Nic, co dotyczy jednego projektu.
 
-Budżet: kilkadziesiąt linii. Każda dodatkowa linia to koszt w każdej sesji i mniejsza waga
-pozostałych reguł.
+Kryterium doboru: trafia tu tylko to, co obowiązuje w każdym projekcie. Każda linia to koszt
+w każdej sesji i mniejsza waga pozostałych reguł, więc reguła dotycząca jednego projektu jest tu
+błędem. Nie ma ustalonego progu długości — o tym, czy plik jest za długi, rozstrzyga to, czy
+reguły z jego dolnych sekcji nadal przechodzą sondy, a nie liczba linii.
 
 ### Poziom repozytorium
 
@@ -37,8 +44,10 @@ pozostałych reguł.
 Miejsce na: strukturę katalogów, komendy (test, check, build), specyfikę stacku, odwołanie do
 dokumentów z wiedzą, lokalne zaostrzenia reguł globalnych.
 
-Budżet: do około osiemdziesięciu linii. Jeśli rośnie więcej, treść należy przenieść do `docs/`
-i zostawić link oraz streszczenie.
+Kryterium doboru: tylko to, czego nie da się wywnioskować z kodu — struktura, komendy, lokalne
+zaostrzenia, link do dokumentów z wiedzą. Gdy plik puchnie, treść przenosi się do `docs/`,
+a w pliku zostaje link i streszczenie. Próg długości nie jest ustalony: mierzy go skuteczność
+reguł, nie liczba linii.
 
 ### Poziom wiedzy
 
@@ -259,7 +268,8 @@ Przed uznaniem pliku instrukcji za gotowy sprawdź:
 - Czy każda dłuższa treść jest w `docs/`, a w pliku instrukcji jest link na górze?
 - Czy nie ma duplikatu pełnej treści w dwóch plikach?
 - Czy komendy podane w pliku faktycznie istnieją i przechodzą w czystym klonie?
-- Czy plik zmieściłby się w jednym ekranie?
+- Czy każda linia zarabia na swoje miejsce, to znaczy czy jej złamanie jest droższe niż koszt
+  trzymania jej w kontekście?
 
 ## Utrzymanie
 
