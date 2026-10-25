@@ -2,33 +2,36 @@
 
 # AI Rules
 
-**Reguły, dzięki którym agent AI psuje mniej kodu — zapisane tak, żeby dało się je wyegzekwować, a nie tylko deklarować.**
+**Rules that make AI agents break less code — written so they can be enforced, not just declared.**
 
-![Licencja: MIT](https://img.shields.io/badge/licencja-MIT-blue)
-![Dokumentacja: polski](https://img.shields.io/badge/dokumentacja-polski-red)
-![Sprawdzenie: jedna komenda](https://img.shields.io/badge/sprawdzenie-jedna%20komenda-success)
+![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+![Docs: English](https://img.shields.io/badge/docs-English-red)
+![Check: one command](https://img.shields.io/badge/check-one%20command-success)
 
 </div>
 
-Baza wiedzy o pisaniu i utrzymywaniu kodu z agentami AI. To nie aplikacja i nie framework:
-zestaw zasad, dokumentów i skryptów, które kopiujesz do własnego projektu.
+A knowledge base about writing and maintaining code with AI agents. It is not an application and
+not a framework: a set of rules, documents and scripts you copy into your own project.
 
-## Po co to istnieje
+The rules describe code, not tooling. The same set works in Claude Code, OpenCode, Codex, Cursor,
+Copilot and Gemini CLI.
 
-Model nie psuje kodu dlatego, że jest zły. Psuje go, bo działa pod presją kontekstu: gubi wątek,
-dopowiada nieistniejące API, pomija wariant, naprawia jedną z dwóch kopii tej samej reguły, robi
-„lokalną” zmianę w pięciu plikach. Każda reguła w tym repozytorium adresuje jeden z tych trybów
-awarii. Reguła, która nie adresuje żadnego, nie ma tu czego szukać.
+## Why this exists
 
-Założenie wyjściowe: **reguła, która żyje wyłącznie w prozie, jest prawdopodobieństwem, nie
-gwarancją.** Dlatego każda reguła ma tu drogę w dół drabiny egzekwowania — od prozy, przez
-checklistę i jedną komendę, do hooka, CI i uprawnień.
+A model does not break code because it is bad at coding. It breaks code because it works under
+context pressure: it loses the thread, invents a nonexistent API, skips a variant, fixes one of
+two copies of the same rule, makes a "local" change that touches five files. Every rule in this
+repository targets one of those failure modes. A rule that targets none has no business here.
 
-Zasady są niezależne od języka. Typy, kontrakty i obsługa błędów tłumaczą się na idiomy języka,
-w którym powstaje projekt. Preferencja narzędziowa autora (Python, `uv`, `pytest` dla skryptów
-pomocniczych) jest opisana osobno i nie jest zasadą architektury.
+Starting assumption: **a rule that lives only in prose is a probability, not a guarantee.** That is
+why every rule has a path down the enforcement ladder — from prose, through a checklist and a
+single command, to a hook, CI and permissions.
 
-## Zacznij w minutę
+The rules are language-agnostic. Types, contracts and error handling translate into the idioms of
+the language the project is written in. The author's tooling preference (Python, `uv`, `pytest` for
+helper scripts) is described separately and is not an architectural rule.
+
+## Start in a minute
 
 ```sh
 git clone https://github.com/JonasWit/AI-Rules.git
@@ -36,98 +39,116 @@ cd AI-Rules
 uv run python scripts/check.py
 ```
 
-Ostatnia komenda sprawdza spójność repozytorium: wymagane pliki, martwe linki, zakazane
-znaczniki, budżety rozmiaru plików i testy projektu.
+The last command checks repository consistency: required files, dead links, forbidden markers,
+file size budgets and project tests.
 
-## Wybierz swoją ścieżkę
+## Pick your path
 
-| Chcę… | Zacznij od |
+| I want to… | Start with |
 | --- | --- |
-| poznać reguły i ich uzasadnienia | [`docs/zasady-ai.md`](docs/zasady-ai.md) |
-| wdrożyć je w swoim projekcie | [`AGENTS.md`](AGENTS.md), potem [`docs/jak-pisac-agents-md.md`](docs/jak-pisac-agents-md.md) |
-| zobaczyć, jak wygląda dobry kod | [`examples/kotlin/`](examples/kotlin/README.md) |
-| sprawdzić, czy model naprawdę ich przestrzega | [`docs/testy-instrukcji.md`](docs/testy-instrukcji.md) |
-| zobaczyć, co jest wymuszane maszynowo | [`scripts/check.py`](scripts/check.py) |
+| learn the rules and the reasoning | [`docs/rules.md`](docs/rules.md) |
+| adopt them in my project | [`AGENTS.md`](AGENTS.md), then [`docs/instruction-files.md`](docs/instruction-files.md) |
+| see what good code looks like | [`examples/kotlin/`](examples/kotlin/README.md) |
+| check whether a model actually follows them | [`docs/probes.md`](docs/probes.md) |
+| see what is enforced mechanically | [`scripts/check.py`](scripts/check.py) |
 
-## Co jest w środku
+## One rule set, every harness
+
+The content of the rules is shared. Only the file a harness reads and the way it includes extra
+content depend on the tool.
+
+| Harness | File it reads |
+| --- | --- |
+| Claude Code | [`CLAUDE.md`](CLAUDE.md), which imports [`AGENTS.md`](AGENTS.md); newer versions read `AGENTS.md` directly |
+| OpenCode | [`AGENTS.md`](AGENTS.md) |
+| Codex | [`AGENTS.md`](AGENTS.md) |
+| Cursor | [`AGENTS.md`](AGENTS.md) or `.cursor/rules/*.mdc` |
+| GitHub Copilot | [`AGENTS.md`](AGENTS.md) or `.github/copilot-instructions.md` |
+| Gemini CLI | `GEMINI.md` |
+
+Details, differences and portability traps: [`docs/instruction-files.md`](docs/instruction-files.md).
+
+## What is inside
 
 ```
-docs/            wiedza: zasady, dystrybucja do AGENTS.md, decyzje, sondy
-examples/kotlin/ złoty przykład czystego rdzenia (TimerEngine)
-scripts/         jedna komenda sprawdzająca + testy w pytest
-.githooks/       hook commit-msg wymagający dowodu w commicie
-.github/         szablon pull requesta z definicją „gotowe”
+docs/            knowledge: rules, distribution to instruction files, decisions, probes
+examples/kotlin/ golden example of a pure core (TimerEngine)
+scripts/         one check command plus its pytest suite
+AGENTS.md        shared rules for every harness
+CLAUDE.md        thin Claude Code adapter: imports AGENTS.md
+.githooks/       commit-msg hook that demands evidence in the commit
+.github/         pull request template with the definition of done
 ```
 
-## Preferowane wybory
+## Preferred choices
 
-### Nienegocjowalne
+### Non-negotiable
 
-- **Test przed kodem.** Zawsze, poza zmianami bez wykonywalnego zachowania.
-- **Twierdzenie wymaga testu.** Sąd („to czytelniejsze”) oznaczaj jako sąd, nie jako dowód.
-- **Jedna zmiana, jeden cel.** Bez refaktorów przy okazji.
+- **Test before code.** Always, except changes with no executable behavior.
+- **A claim requires a test.** Label a judgment ("this is clearer") as a judgment, not as proof.
+- **One change, one purpose.** No refactors along the way.
 
-### Architektura
+### Architecture
 
-- **Funkcjonalny rdzeń, cienka skorupa I/O.** Logika nie wie, że istnieje sieć, zegar czy plik.
-- **Zależności w jedną stronę.** Adaptery i UI znają rdzeń; rdzeń nie zna ich nigdy.
-- **Granica walidacji raz.** Dane z zewnątrz zamieniane na wąski typ na wejściu, dalej bez sprawdzeń.
-- **Moduły według domeny, nie według typu.** `zamowienia/`, nie `services/` + `models/` + `controllers/`.
-- **Warianty jako zamknięte typy z wyczerpującym dopasowaniem.** Zapomniany przypadek = błąd kompilacji; w językach bez sum typów — `enum` plus test wyczerpujący warianty.
-- **Błędy jako wartości w rdzeniu.** `Result`/`Either`, a gdy język nie ma typowanego wyniku — jawny typ błędu w sygnaturze. Wyjątki tylko na granicy.
-- **Stan jawny, przekazywany argumentem.** Żadnych globali, singletonów ani mutowalnych modułów.
-- **Czas, losowość, identyfikatory i sieć wstrzykiwane.** Rdzeń nie czyta ich sam.
-- **Konfiguracja wczytywana raz, na starcie.** Przekazywana dalej jako jawny obiekt.
-- **Kompozycja zamiast dziedziczenia.** Hierarchia klas tylko tam, gdzie narzuca ją framework.
-- **Maksymalnie trzy warstwy.** Każda kolejna to koszt kontekstu i miejsce na pomyłkę.
-- **Bez kontenerów DI, dekoratorów zmieniających zachowanie i metaprogramowania.** Jawne wywołania.
+- **Functional core, thin I/O shell.** The logic does not know that a network, clock or file exists.
+- **Dependencies point one way.** Adapters and UI know the core; the core never knows them.
+- **Validate once at the boundary.** External data becomes a narrow type on entry and is trusted deeper.
+- **Modules by domain, not by type.** `orders/`, not `services/` + `models/` + `controllers/`.
+- **Variants as closed types with exhaustive matching.** A forgotten case is a compile error; in languages without sum types, an `enum` plus a test that iterates every variant.
+- **Errors as values in the core.** `Result`/`Either`, or an explicit error type in the signature when the language has no typed result. Exceptions stay at the boundary.
+- **Explicit state passed as an argument.** No globals, singletons or mutable modules.
+- **Time, randomness, identifiers and the network are injected.** The core never reads them itself.
+- **Configuration is loaded once, at startup.** Passed on as an explicit object.
+- **Composition over inheritance.** Class hierarchies only where a framework requires them.
+- **At most three layers.** Every extra layer costs context and invites mistakes.
+- **No DI containers, behavior-changing decorators or metaprogramming.** Explicit calls.
 
-### Kod
+### Code
 
-- **Plik do około 300 linii, funkcja do około 30.** To konwencja projektu, nie wynik pomiaru; limit pliku egzekwuje [`scripts/check.py`](scripts/check.py).
-- **Jedna nazwa na koncept w całym repo.** Bez synonimów; bez `data`, `manager`, `utils`, `helper`.
-- **Bez flag w parametrach.** Wariant to osobna funkcja albo nazwany obiekt opcji.
-- **Wczesne wyjścia, maksymalnie dwa poziomy zagnieżdżenia.**
-- **Dane zamiast logiki.** Macierz przypadków jako tabela lub mapowanie, nie łańcuch `if`/`else`.
-- **Niemutowalne struktury.** Funkcja zwraca nową wartość, nie zmienia wejścia.
-- **Deterministyczna kolejność** w kolekcjach i w wyjściu, żeby diff był czytelny.
-- **Wąskie API modułu.** Kilka funkcji publicznych, reszta prywatna.
-- **Komentarz mówi o pułapce, nie o kodzie.** Nagłówek modułu: po co, co dostaje, co gwarantuje.
+- **A file around 300 lines, a function around 30.** This is a project convention, not a measurement; the file limit is enforced by [`scripts/check.py`](scripts/check.py).
+- **One name per concept across the repository.** No synonyms; no `data`, `manager`, `utils`, `helper`.
+- **No flags in parameters.** A variant is a separate function or a named options object.
+- **Early exits, at most two levels of nesting.**
+- **Data instead of logic.** A case matrix is a table or a mapping, not an `if`/`else` chain.
+- **Immutable structures.** A function returns a new value; it does not mutate its input.
+- **Deterministic ordering** in collections and output, so diffs stay readable.
+- **A narrow module API.** A few public functions, the rest private.
+- **A comment explains a trap, not the code.** Module header: why it exists, what it takes, what it guarantees.
 
-### Testy
+### Tests
 
-- **Jeden test, jedna reguła.** Nazwa testu to zdanie o gwarantowanym zachowaniu.
-- **Rdzeń testowany bez mocków.** Mock tylko na granicy, którą sami wyznaczyliśmy.
-- **Test deterministyczny.** Bez prawdziwego zegara, sieci i losowości; inaczej wstrzyknięte.
-- **Property i snapshot** tam, gdzie przypadków jest zbyt wiele na wyliczanie ręczne.
-- **Przed zmianą starego kodu** powstaje test charakteryzujący obecne zachowanie.
+- **One test, one rule.** The test name is a sentence about guaranteed behavior.
+- **The core is tested without mocks.** Mocks only at boundaries we defined ourselves.
+- **Deterministic tests.** No real clock, network or randomness; inject them instead.
+- **Property and snapshot tests** where there are too many cases to enumerate by hand.
+- **Before changing old code**, write a characterization test for the current behavior.
 
-### Zależności i narzędzia
+### Dependencies and tooling
 
-- **Biblioteka standardowa przed pakietem.** Nowa zależność wymaga uzasadnienia.
-- **Wersje przypięte, lock w repozytorium.**
-- **Jeden toolchain dla narzędzi.** Żadnego drugiego systemu budowania obok istniejącego.
-- **Jedna komenda sprawdzająca** w projekcie, niezależnie od języka.
-- **Formatowanie i lint w konfiguracji narzędzi**, nie w dokumentacji jako prośba.
+- **Standard library before a package.** A new dependency needs a justification.
+- **Pinned versions, lockfile in the repository.**
+- **One toolchain for tooling.** No second build system next to an existing one.
+- **One check command** per project, regardless of language.
+- **Formatting and lint in tool configuration**, not in documentation as a request.
 
-### Preferencja autora, nie architektura
+### Author preference, not architecture
 
-- **Skrypty pomocnicze i ich testy w Pythonie**, środowisko i wersje przez `uv`, testy w `pytest`.
-- Wybór dotyczy narzędzi, nie kodu projektu. Projekt z własnym toolchainem zachowuje swój.
+- **Helper scripts and their tests in Python**, environment and versions managed by `uv`, tests in `pytest`.
+- This concerns tooling, not project code. A project with its own toolchain keeps it.
 
-### Czego nie robić
+### What not to do
 
-- **Nie buduj abstrakcji „na przyszłość”.** Wprowadzaj ją, gdy pojawi się drugi przypadek.
-- **Nie dodawaj warstwy, żeby „oddzielić odpowiedzialności”.** Najpierw sprawdź, czy problem istnieje.
-- **Nie wyciągaj wspólnego kodu, dopóki nie ma dwóch realnych użyć.**
-- **Nie zmieniaj nazw i struktury w commicie naprawiającym błąd.**
-- **Nie zostawiaj `TODO`.** Albo zrobione, albo zgłoszone jako niezrobione.
+- **Do not build abstractions "for the future".** Introduce them when a second case appears.
+- **Do not add a layer just to "separate responsibilities".** First check that the problem exists.
+- **Do not extract shared code until there are two real uses.**
+- **Do not rename or restructure in a commit that fixes a bug.**
+- **Do not leave `TODO` behind.** Either it is done, or it is reported as not done.
 
-## Złoty przykład
+## Golden example
 
-[`examples/kotlin/`](examples/kotlin/README.md) — `TimerEngine` z projektu `workoutbase` jako
-wzorzec czystego rdzenia: niemutowalny stan, czas jako argument, wyczerpujące dopasowanie
-wariantów i testy pisane jak specyfikacja.
+[`examples/kotlin/`](examples/kotlin/README.md) — `TimerEngine` from the `workoutbase` project as a
+model of a pure core: immutable state, time as an argument, exhaustive variant matching and tests
+written as a specification.
 
 ```kotlin
 @Test
@@ -136,55 +157,55 @@ fun tick_throughPrepare_movesToFirstWorkRound() { … }
 fun tick(state: TimerState, deltaMillis: Long): TimerTransition
 ```
 
-Rdzeń nie czyta zegara — dostaje upływ czasu jako argument i zwraca nowy stan razem z listą
-sygnałów do odegrania. Dzięki temu test nie potrzebuje prawdziwego czasu ani Androida.
+The core does not read a clock — it receives elapsed time as an argument and returns a new state
+together with the list of cues to play. That is why the test needs neither real time nor Android.
 
-## Dokumenty
+## Documents
 
-| Plik | Na jakie pytanie odpowiada |
+| File | The question it answers |
 | --- | --- |
-| [`docs/zasady-ai.md`](docs/zasady-ai.md) | Jakich reguł przestrzegać przy pisaniu kodu i dlaczego zmniejszają one liczbę błędów modelu |
-| [`docs/jak-pisac-agents-md.md`](docs/jak-pisac-agents-md.md) | Jak przenieść tę wiedzę do `AGENTS.md` / `CLAUDE.md`, żeby naprawdę działała |
-| [`docs/wzorce.md`](docs/wzorce.md) | Dziennik decyzji: problem, decyzja, odrzucone alternatywy, konsekwencje |
-| [`docs/testy-instrukcji.md`](docs/testy-instrukcji.md) | Sondy, które próbują złamać reguły, żeby ustalić, które faktycznie wiążą |
-| [`AGENTS.md`](AGENTS.md) | Plik instrukcji, który agent czyta automatycznie w tym repozytorium |
+| [`docs/rules.md`](docs/rules.md) | Which rules to follow when writing code, and why they reduce the number of model mistakes |
+| [`docs/instruction-files.md`](docs/instruction-files.md) | How to move this knowledge into the instruction file of any harness so it actually works |
+| [`docs/decisions.md`](docs/decisions.md) | Decision log: problem, decision, rejected alternatives, consequences |
+| [`docs/probes.md`](docs/probes.md) | Probes that try to break the rules, to establish which ones actually bind |
+| [`AGENTS.md`](AGENTS.md) | The shared instruction file; [`CLAUDE.md`](CLAUDE.md) imports it for Claude Code |
 
-## Egzekwowanie
+## Enforcement
 
-| Mechanizm | Co blokuje |
+| Mechanism | What it blocks |
 | --- | --- |
-| [`scripts/check.py`](scripts/check.py) | Brakujące dokumenty, martwe linki, zakazane znaczniki, zbyt duże pliki, nieprzechodzące testy projektu |
-| `uv run pytest` | Regresje w samym skrypcie sprawdzającym |
-| `.githooks/commit-msg` | Commity bez linii `Test:` albo `Unverified:` |
-| `.github/pull_request_template.md` | Pull requesty, które pomijają definicję „gotowe” |
+| [`scripts/check.py`](scripts/check.py) | Missing documents, dead links, forbidden markers, oversized files, failing project tests |
+| `uv run pytest` | Regressions in the check script itself |
+| `.githooks/commit-msg` | Commits without a `Test:` or `Unverified:` line |
+| `.github/pull_request_template.md` | Pull requests that skip the definition of done |
 
-Włącz hooki raz na klon:
+Enable the hooks once per clone:
 
 ```sh
 git config core.hooksPath .githooks
 ```
 
-Uruchom sprawdzenie (wraz z testami projektu, jeśli istnieje `pyproject.toml`):
+Run the check (including project tests, when `pyproject.toml` exists):
 
 ```sh
 uv run python scripts/check.py
 ```
 
-Uruchom same testy skryptu sprawdzającego:
+Run only the check script's tests:
 
 ```sh
 uv run pytest
 ```
 
-## Jak użyć tego w nowym projekcie
+## Using this in a new project
 
-- Skopiuj [`AGENTS.md`](AGENTS.md) oraz te dokumenty z `docs/`, które pasują do projektu.
-- Trzymaj reguły normatywne w jednym miejscu i linkuj do nich; nigdy nie kopiuj pełnej treści dwa razy.
-- Dodaj komendy specyficzne dla stacku i konfigurację narzędzi w tej samej zmianie, żeby reguły stały się wykonywalne, a nie aspiracyjne.
-- Napisz złoty przykład w języku pierwszego projektu, nie wcześniej.
-- Uruchom sondy z [`docs/testy-instrukcji.md`](docs/testy-instrukcji.md), gdy reguły będą już na miejscu.
+- Copy [`AGENTS.md`](AGENTS.md) and those documents from `docs/` that fit the project. If your harness reads its own file, add an adapter that imports the shared content instead of copying it.
+- Keep normative rules in one place and link to them; never copy the full text twice.
+- Add stack-specific commands and tool configuration in the same change, so the rules become executable rather than aspirational.
+- Write the golden example in the language of the first project, not before.
+- Run the probes from [`docs/probes.md`](docs/probes.md) once the rules are in place.
 
-## Licencja
+## License
 
-MIT — szczegóły w pliku [`LICENSE`](LICENSE). O ile w podkatalogu nie zaznaczono inaczej,
-treści są udostępniane na tej licencji.
+MIT — see [`LICENSE`](LICENSE). Unless stated otherwise in a subdirectory, the contents are
+published under that license.

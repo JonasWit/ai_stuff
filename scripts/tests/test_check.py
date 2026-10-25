@@ -60,21 +60,21 @@ def test_clean_repository_passes(make_repo, capsys):
 
 
 def test_missing_required_document_fails(make_repo, capsys):
-    root = make_repo(missing=("docs/wzorce.md",))
+    root = make_repo(missing=("docs/decisions.md",))
     code, out = run(root, capsys)
     assert code == 1
-    assert "docs/wzorce.md" in out
+    assert "docs/decisions.md" in out
 
 
 def test_dead_relative_link_fails(make_repo, capsys):
-    root = make_repo({"README.md": "[missing](docs/nie-ma.md)\n"})
+    root = make_repo({"README.md": "[missing](docs/missing.md)\n"})
     code, out = run(root, capsys)
     assert code == 1
-    assert "docs/nie-ma.md" in out
+    assert "docs/missing.md" in out
 
 
 def test_working_relative_link_passes(make_repo, capsys):
-    root = make_repo({"README.md": "[rules](docs/zasady-ai.md)\n"})
+    root = make_repo({"README.md": "[rules](docs/rules.md)\n"})
     code, _ = run(root, capsys)
     assert code == 0
 
@@ -86,7 +86,7 @@ def test_external_link_is_not_checked(make_repo, capsys):
 
 
 def test_link_inside_code_fence_is_ignored(make_repo, capsys):
-    root = make_repo({"README.md": "```\n[sample](docs/nie-ma.md)\n```\n"})
+    root = make_repo({"README.md": "```\n[sample](docs/missing.md)\n```\n"})
     code, _ = run(root, capsys)
     assert code == 0
 

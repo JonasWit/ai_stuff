@@ -23,10 +23,11 @@ from pathlib import Path
 REQUIRED_FILES = (
     "README.md",
     "AGENTS.md",
-    "docs/zasady-ai.md",
-    "docs/jak-pisac-agents-md.md",
-    "docs/wzorce.md",
-    "docs/testy-instrukcji.md",
+    "CLAUDE.md",
+    "docs/rules.md",
+    "docs/instruction-files.md",
+    "docs/decisions.md",
+    "docs/probes.md",
     "scripts/check.py",
 )
 

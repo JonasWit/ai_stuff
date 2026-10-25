@@ -1,7 +1,7 @@
 #!/bin/sh
 # Rejects commits that carry no evidence.
 # Required: one line starting with "Test:" or "Unverified:".
-# See docs/zasady-ai.md, section "Twierdzenie bez testu jest hipoteza".
+# See docs/rules.md, section "A claim without a test is a hypothesis".
 
 msg_file="$1"
 
@@ -25,5 +25,5 @@ echo "Add one of these lines to the commit message:" >&2
 echo "  Test: <test name that proves the change>" >&2
 echo "  Unverified: <what was not verified and why>" >&2
 echo "" >&2
-echo "Rules: docs/zasady-ai.md (claims without a test are hypotheses)." >&2
+echo "Rules: docs/rules.md (claims without a test are hypotheses)." >&2
 exit 1

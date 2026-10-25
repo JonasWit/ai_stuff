@@ -1,16 +1,16 @@
 # Agent Instructions
 
-This repository is a knowledge base: how to write and maintain code so that AI
-agents make fewer mistakes, and how to encode that knowledge in `AGENTS.md` and
-`CLAUDE.md` files. It is not an application.
+This repository is a knowledge base: how to write and maintain code so that AI agents make fewer
+mistakes, and how to encode that knowledge in the instruction file of any harness (`AGENTS.md`,
+`CLAUDE.md`, `GEMINI.md` and equivalents). It is not an application.
 
 Read these before editing anything:
 
-- `docs/zasady-ai.md` — canonical coding rules, in Polish.
-- `README.md` — the human-facing summary of preferred choices, in Polish.
-- `docs/jak-pisac-agents-md.md` — how to distribute those rules into instruction files.
-- `docs/wzorce.md` — decision log; every new pattern needs an entry here.
-- `docs/testy-instrukcji.md` — probes that check whether the rules actually bind.
+- `docs/rules.md` — canonical coding rules.
+- `README.md` — the human-facing summary of preferred choices.
+- `docs/instruction-files.md` — how to distribute those rules into instruction files.
+- `docs/decisions.md` — decision log; every new pattern needs an entry here.
+- `docs/probes.md` — probes that check whether the rules actually bind.
 
 ## Verification and tests
 
@@ -29,15 +29,17 @@ Read these before editing anything:
 
 - Normative rules live in `docs/`. This file summarizes and links; it never copies
   full rule text, because duplication is a bug.
-- Documentation and `README.md` are Polish. This instruction file, scripts and commit
-  messages are English.
+- Everything in this repository is English: documentation, instruction files,
+  comments, commit messages and repository metadata.
+- Rules are harness-independent. Tool-specific mechanics belong in
+  `docs/instruction-files.md`, never in the canonical source.
 - Do not number rule lists; headings carry the structure.
 - Stay within the file size budget enforced by `scripts/check.py`.
 
 ## Working process
 
 - Find an existing pattern and follow it. A new pattern means a new entry in
-  `docs/wzorce.md` in the same change.
+  `docs/decisions.md` in the same change.
 - One change, one purpose. No drive-by refactors, no leftover TODOs.
 - Ask questions through the structured question tool, never in plain prose.
 - Report what you could not verify. Silence about uncertainty is a false claim.
@@ -46,12 +48,14 @@ Read these before editing anything:
 
 - `docs/` — the knowledge itself
 - `scripts/` — tooling in Python, with pytest tests in `scripts/tests/`
+- `AGENTS.md` — shared rules read by most harnesses
+- `CLAUDE.md` — thin Claude Code adapter that imports `AGENTS.md`
 - `.githooks/` — git hooks, enabled through `core.hooksPath`
 - `.github/` — pull request template
 
 ## Precedence
 
-The global `AGENTS.md` provides defaults. The documents here refine and tighten
+The global instruction file provides defaults. The documents here refine and tighten
 them. When they conflict, the more specific and more restrictive rule wins; this
 repository may not loosen a global rule, for example by dropping the test-first
 requirement.

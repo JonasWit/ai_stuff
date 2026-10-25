@@ -1,35 +1,35 @@
-# Złoty przykład: TimerEngine (Kotlin)
+# Golden example: TimerEngine (Kotlin)
 
-Wzorzec czystego rdzenia w Kotlinie, skopiowany bez zmian z projektu `workoutbase`.
+A model of a pure core in Kotlin, copied unchanged from the `workoutbase` project.
 
-## Co pokazuje
+## What it shows
 
-- **Niemutowalny stan** — `TimerState` i `TimerConfig` są `data class`, a każda operacja
-  zwraca nowy stan zamiast zmieniać istniejący.
-- **Czas jako argument** — `tick(state, deltaMillis)` nie czyta zegara, więc testy nie
-  potrzebują prawdziwego czasu.
-- **Zamknięte warianty** — `TimerPhase` i `TimerCue` to enumy, a `when` w silniku jest
-  wyczerpujące; nowy wariant to błąd kompilacji, nie cicha luka.
-- **Walidacja na granicy** — `TimerConfig` sprawdza zakresy w `init`, więc dalej rdzeń
-  nie powtarza tych samych warunków.
-- **Wynik jako wartość** — `TimerTransition` zwraca nowy stan razem z listą sygnałów,
-  które trzeba odegrać; rdzeń nie wie, że istnieje dźwięk czy wibracja.
-- **Testy jako specyfikacja** — nazwy testów są zdaniami o gwarantowanym zachowaniu,
-  jeden test odpowiada jednej regule, zero mocków.
+- **Immutable state** — `TimerState` and `TimerConfig` are `data class`es, and every operation returns
+  a new state instead of changing the existing one.
+- **Time as an argument** — `tick(state, deltaMillis)` does not read a clock, so tests do not need
+  real time.
+- **Closed variants** — `TimerPhase` and `TimerCue` are enums, and the `when` in the engine is
+  exhaustive; a new variant is a compile error, not a silent gap.
+- **Validation at the boundary** — `TimerConfig` checks ranges in `init`, so the core does not repeat
+  the same conditions further down.
+- **A result as a value** — `TimerTransition` returns a new state together with the list of cues to
+  play; the core does not know that sound or vibration exist.
+- **Tests as a specification** — test names are sentences about guaranteed behavior, one test
+  corresponds to one rule, zero mocks.
 
-## Jak czytać
+## How to read it
 
-Najpierw `TimerEngineTest.kt`, potem `TimerEngine.kt`. Testy mówią, co timer ma robić;
-implementacja pokazuje, jak zbudować to bez efektów ubocznych.
+Start with `TimerEngineTest.kt`, then `TimerEngine.kt`. The tests say what the timer must do; the
+implementation shows how to build that without side effects.
 
-## Czego ten katalog nie robi
+## What this directory does not do
 
-Nie jest budowany ani uruchamiany w tym repozytorium. Nie ma tu toolchainu Kotlina —
-pliki są referencją do czytania i kopiowania. Aby je uruchomić, potrzebny jest projekt
-Kotlin z JUnit, taki jak `workoutbase`.
+It is not built or run in this repository. There is no Kotlin toolchain here — the files are a
+reference for reading and copying. To run them you need a Kotlin project with JUnit, such as
+`workoutbase`.
 
-## Pochodzenie i utrzymanie
+## Origin and maintenance
 
-Pliki pochodzą z aplikacji `workoutbase` (pakiet `com.wtk_apps.workoutbase.timer`).
-Przy zmianie zasad w `docs/zasady-ai.md` sprawdź, czy przykład nadal je ilustruje;
-jeśli nie, popraw przykład w tej samej zmianie.
+The files come from the `workoutbase` application (package `com.wtk_apps.workoutbase.timer`). When the
+rules in [`docs/rules.md`](../../docs/rules.md) change, check whether the example still illustrates
+them; if it does not, fix the example in the same change.

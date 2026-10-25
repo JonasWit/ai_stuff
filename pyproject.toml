@@ -1,6 +1,6 @@
 [project]
 name = "ai-rules"
-version = "0.1.2"
+version = "0.2.0"
 description = "Knowledge base about writing code with AI agents, with executable checks."
 requires-python = ">=3.11"
 dependencies = []

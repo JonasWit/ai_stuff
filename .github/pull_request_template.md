@@ -1,28 +1,28 @@
-## Co zmienia ta zmiana
+## What does this change do
 
-<!-- Jedno zdanie. Jeden cel. -->
+<!-- One sentence. One purpose. -->
 
-## Definicja „gotowe”
+## Definition of done
 
-- [ ] Test powstał przed implementacją i widziałem jego czerwony wynik
-- [ ] `uv run python scripts/check.py` przechodzi — surowy wynik wklejony poniżej
-- [ ] Każde twierdzenie o zachowaniu wskazuje test, który je potwierdza
-- [ ] Brak refaktorów przy okazji i brak `TODO` w kodzie
-- [ ] Nowy wzorzec zapisany w `docs/wzorce.md`
-- [ ] Żadna zależność nie została dodana bez uzasadnienia
-- [ ] Dokumentacja zaktualizowana w tym samym commicie, jeśli zmiana tego wymaga
+- [ ] The test existed before the implementation and I saw its red result
+- [ ] `uv run python scripts/check.py` passes — raw output pasted below
+- [ ] Every claim about behavior names the test that proves it
+- [ ] No refactors along the way and no `TODO` left in code
+- [ ] Any new pattern recorded in `docs/decisions.md`
+- [ ] No dependency added without justification
+- [ ] Documentation updated in the same commit when the change requires it
 
-## Dowód
+## Evidence
 
 <details>
-<summary>Wynik sprawdzenia</summary>
+<summary>Check output</summary>
 
 ```
-wklej tutaj surowy wynik uv run python scripts/check.py
+paste the raw output of uv run python scripts/check.py here
 ```
 
 </details>
 
-## Niezweryfikowane
+## Unverified
 
-<!-- Co zostało bez testu i dlaczego. Jeśli nic — napisz „brak”. -->
+<!-- What has no test and why. If nothing, write "none". -->
