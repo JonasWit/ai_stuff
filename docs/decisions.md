@@ -168,18 +168,18 @@ summary — entry requires reading the whole document.
 **Consequences:** `README.md` is the only place for the digest. Changing a rule requires checking
 `README.md` and `docs/rules.md`.
 
-### A golden example from workoutbase
+### A golden example from WorkoutBase
 
 **Status:** accepted — supersedes the earlier decision "A golden example only with the first stack"
 
 **Problem:** descriptive rules do not show what their implementation looks like in real code, and the
-first project's stack already exists: Kotlin in `workoutbase`.
+first project's stack already exists: Kotlin in `WorkoutBase`.
 
-**Decision:** `examples/kotlin/` contains `TimerEngine` and its tests copied from `workoutbase` without
+**Decision:** `examples/kotlin/` contains `TimerEngine` and its tests copied from `WorkoutBase` without
 changes, with a description of what they illustrate and what this directory does not contain.
 
 **Rejected alternatives:** writing a new example from scratch — would duplicate existing, proven code;
-keeping the example only in `workoutbase` — the knowledge would not be available outside that project.
+keeping the example only in `WorkoutBase` — the knowledge would not be available outside that project.
 
 **Consequences:** the example is a reference, not a built module. Changing the rules requires checking
 whether the example still illustrates them.

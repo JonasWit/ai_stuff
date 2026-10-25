@@ -146,7 +146,7 @@ CLAUDE.md        thin Claude Code adapter: imports AGENTS.md
 
 ## Golden example
 
-[`examples/kotlin/`](examples/kotlin/README.md) — `TimerEngine` from the `workoutbase` project as a
+[`examples/kotlin/`](examples/kotlin/README.md) — `TimerEngine` from the `WorkoutBase` project as a
 model of a pure core: immutable state, time as an argument, exhaustive variant matching and tests
 written as a specification.
 

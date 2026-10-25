@@ -1,6 +1,6 @@
 # Golden example: TimerEngine (Kotlin)
 
-A model of a pure core in Kotlin, copied unchanged from the `workoutbase` project.
+A model of a pure core in Kotlin, copied unchanged from the `WorkoutBase` project.
 
 ## What it shows
 
@@ -26,10 +26,10 @@ implementation shows how to build that without side effects.
 
 It is not built or run in this repository. There is no Kotlin toolchain here — the files are a
 reference for reading and copying. To run them you need a Kotlin project with JUnit, such as
-`workoutbase`.
+`WorkoutBase`.
 
 ## Origin and maintenance
 
-The files come from the `workoutbase` application (package `com.wtk_apps.workoutbase.timer`). When the
+The files come from the `WorkoutBase` application (package `com.wtk_apps.workoutbase.timer`). When the
 rules in [`docs/rules.md`](../../docs/rules.md) change, check whether the example still illustrates
 them; if it does not, fix the example in the same change.
