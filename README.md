@@ -1,10 +1,14 @@
-# ai_stuff
+<div align="center">
+
+# AI Rules
 
 **Reguły, dzięki którym agent AI psuje mniej kodu — zapisane tak, żeby dało się je wyegzekwować, a nie tylko deklarować.**
 
 ![Licencja: MIT](https://img.shields.io/badge/licencja-MIT-blue)
 ![Dokumentacja: polski](https://img.shields.io/badge/dokumentacja-polski-red)
 ![Sprawdzenie: jedna komenda](https://img.shields.io/badge/sprawdzenie-jedna%20komenda-success)
+
+</div>
 
 Baza wiedzy o pisaniu i utrzymywaniu kodu z agentami AI. To nie aplikacja i nie framework:
 zestaw zasad, dokumentów i skryptów, które kopiujesz do własnego projektu.
@@ -27,8 +31,8 @@ pomocniczych) jest opisana osobno i nie jest zasadą architektury.
 ## Zacznij w minutę
 
 ```sh
-git clone https://github.com/JonasWit/ai_stuff.git
-cd ai_stuff
+git clone https://github.com/JonasWit/AI-Rules.git
+cd AI-Rules
 uv run python scripts/check.py
 ```
 
