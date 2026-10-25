@@ -1,16 +1,59 @@
 # ai_stuff
 
-Baza wiedzy o pisaniu i utrzymywaniu kodu z agentami AI: które reguły zmniejszają liczbę błędów
-modelu, dlaczego działają i jak je zapisać, żeby agent faktycznie ich przestrzegał. To nie jest
-aplikacja i nie ma tu kodu projektowego.
+**Reguły, dzięki którym agent AI psuje mniej kodu — zapisane tak, żeby dało się je wyegzekwować, a nie tylko deklarować.**
 
-Założenie wyjściowe: reguła, która żyje wyłącznie w prozie, jest prawdopodobieństwem, nie
-gwarancją. Każda reguła opisana tutaj powinna docelowo przesunąć się w dół drabiny egzekwowania —
-do komendy, hooka, CI albo uprawnień.
+![Licencja: MIT](https://img.shields.io/badge/licencja-MIT-blue)
+![Dokumentacja: polski](https://img.shields.io/badge/dokumentacja-polski-red)
+![Sprawdzenie: jedna komenda](https://img.shields.io/badge/sprawdzenie-jedna%20komenda-success)
 
-Zasady są niezależne od języka. Konkretne konstrukcje — typy, kontrakty, obsługa błędów — tłumaczy
-się na idiomy języka, w którym powstaje projekt. Preferencja narzędziowa autora jest opisana
-osobno i nie jest zasadą architektury.
+Baza wiedzy o pisaniu i utrzymywaniu kodu z agentami AI. To nie aplikacja i nie framework:
+zestaw zasad, dokumentów i skryptów, które kopiujesz do własnego projektu.
+
+## Po co to istnieje
+
+Model nie psuje kodu dlatego, że jest zły. Psuje go, bo działa pod presją kontekstu: gubi wątek,
+dopowiada nieistniejące API, pomija wariant, naprawia jedną z dwóch kopii tej samej reguły, robi
+„lokalną” zmianę w pięciu plikach. Każda reguła w tym repozytorium adresuje jeden z tych trybów
+awarii. Reguła, która nie adresuje żadnego, nie ma tu czego szukać.
+
+Założenie wyjściowe: **reguła, która żyje wyłącznie w prozie, jest prawdopodobieństwem, nie
+gwarancją.** Dlatego każda reguła ma tu drogę w dół drabiny egzekwowania — od prozy, przez
+checklistę i jedną komendę, do hooka, CI i uprawnień.
+
+Zasady są niezależne od języka. Typy, kontrakty i obsługa błędów tłumaczą się na idiomy języka,
+w którym powstaje projekt. Preferencja narzędziowa autora (Python, `uv`, `pytest` dla skryptów
+pomocniczych) jest opisana osobno i nie jest zasadą architektury.
+
+## Zacznij w minutę
+
+```sh
+git clone https://github.com/JonasWit/ai_stuff.git
+cd ai_stuff
+uv run python scripts/check.py
+```
+
+Ostatnia komenda sprawdza spójność repozytorium: wymagane pliki, martwe linki, zakazane
+znaczniki, budżety rozmiaru plików i testy projektu.
+
+## Wybierz swoją ścieżkę
+
+| Chcę… | Zacznij od |
+| --- | --- |
+| poznać reguły i ich uzasadnienia | [`docs/zasady-ai.md`](docs/zasady-ai.md) |
+| wdrożyć je w swoim projekcie | [`AGENTS.md`](AGENTS.md), potem [`docs/jak-pisac-agents-md.md`](docs/jak-pisac-agents-md.md) |
+| zobaczyć, jak wygląda dobry kod | [`examples/kotlin/`](examples/kotlin/README.md) |
+| sprawdzić, czy model naprawdę ich przestrzega | [`docs/testy-instrukcji.md`](docs/testy-instrukcji.md) |
+| zobaczyć, co jest wymuszane maszynowo | [`scripts/check.py`](scripts/check.py) |
+
+## Co jest w środku
+
+```
+docs/            wiedza: zasady, dystrybucja do AGENTS.md, decyzje, sondy
+examples/kotlin/ złoty przykład czystego rdzenia (TimerEngine)
+scripts/         jedna komenda sprawdzająca + testy w pytest
+.githooks/       hook commit-msg wymagający dowodu w commicie
+.github/         szablon pull requesta z definicją „gotowe”
+```
 
 ## Preferowane wybory
 
@@ -37,7 +80,7 @@ osobno i nie jest zasadą architektury.
 
 ### Kod
 
-- **Plik do około 300 linii, funkcja do około 30.** To konwencja projektu, nie wynik pomiaru; limit pliku egzekwuje `scripts/check.py`.
+- **Plik do około 300 linii, funkcja do około 30.** To konwencja projektu, nie wynik pomiaru; limit pliku egzekwuje [`scripts/check.py`](scripts/check.py).
 - **Jedna nazwa na koncept w całym repo.** Bez synonimów; bez `data`, `manager`, `utils`, `helper`.
 - **Bez flag w parametrach.** Wariant to osobna funkcja albo nazwany obiekt opcji.
 - **Wczesne wyjścia, maksymalnie dwa poziomy zagnieżdżenia.**
@@ -78,9 +121,19 @@ osobno i nie jest zasadą architektury.
 
 ## Złoty przykład
 
-[`examples/kotlin/`](examples/kotlin/README.md) — `TimerEngine` z projektu `workoutbase`
-jako wzorzec czystego rdzenia: niemutowalny stan, czas jako argument, wyczerpujące
-dopasowanie wariantów i testy pisane jak specyfikacja.
+[`examples/kotlin/`](examples/kotlin/README.md) — `TimerEngine` z projektu `workoutbase` jako
+wzorzec czystego rdzenia: niemutowalny stan, czas jako argument, wyczerpujące dopasowanie
+wariantów i testy pisane jak specyfikacja.
+
+```kotlin
+@Test
+fun tick_throughPrepare_movesToFirstWorkRound() { … }
+
+fun tick(state: TimerState, deltaMillis: Long): TimerTransition
+```
+
+Rdzeń nie czyta zegara — dostaje upływ czasu jako argument i zwraca nowy stan razem z listą
+sygnałów do odegrania. Dzięki temu test nie potrzebuje prawdziwego czasu ani Androida.
 
 ## Dokumenty
 
@@ -96,7 +149,7 @@ dopasowanie wariantów i testy pisane jak specyfikacja.
 
 | Mechanizm | Co blokuje |
 | --- | --- |
-| `scripts/check.py` | Brakujące dokumenty, martwe linki, zakazane znaczniki, zbyt duże pliki, nieprzechodzące testy projektu |
+| [`scripts/check.py`](scripts/check.py) | Brakujące dokumenty, martwe linki, zakazane znaczniki, zbyt duże pliki, nieprzechodzące testy projektu |
 | `uv run pytest` | Regresje w samym skrypcie sprawdzającym |
 | `.githooks/commit-msg` | Commity bez linii `Test:` albo `Unverified:` |
 | `.github/pull_request_template.md` | Pull requesty, które pomijają definicję „gotowe” |
@@ -121,12 +174,13 @@ uv run pytest
 
 ## Jak użyć tego w nowym projekcie
 
-- Skopiuj `AGENTS.md` oraz te dokumenty z `docs/`, które pasują do projektu.
+- Skopiuj [`AGENTS.md`](AGENTS.md) oraz te dokumenty z `docs/`, które pasują do projektu.
 - Trzymaj reguły normatywne w jednym miejscu i linkuj do nich; nigdy nie kopiuj pełnej treści dwa razy.
 - Dodaj komendy specyficzne dla stacku i konfigurację narzędzi w tej samej zmianie, żeby reguły stały się wykonywalne, a nie aspiracyjne.
 - Napisz złoty przykład w języku pierwszego projektu, nie wcześniej.
-- Uruchom sondy z `docs/testy-instrukcji.md`, gdy reguły będą już na miejscu.
+- Uruchom sondy z [`docs/testy-instrukcji.md`](docs/testy-instrukcji.md), gdy reguły będą już na miejscu.
 
 ## Licencja
 
-O ile w podkatalogu nie zaznaczono inaczej, treści są udostępniane na licencji MIT.
+MIT — szczegóły w pliku [`LICENSE`](LICENSE). O ile w podkatalogu nie zaznaczono inaczej,
+treści są udostępniane na tej licencji.
